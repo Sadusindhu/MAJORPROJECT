@@ -1,0 +1,38 @@
+Copilot said: Real-time Detection - Analyze "John Admin" — Safe -
+Real-time Detection
+
+Analyze "John Admin" — Safe
+Analyze "' OR '1'='1" — Unsafe
+Analyze "' UNION SELECT * FROM employees--" — Unsafe
+Analyze "admin'--" — Unsafe
+Analyze "'; DROP TABLE employees--" — Unsafe
+Analyze "' OR 1=1#" — Unsafe
+Analyze empty input (press Analyze with no text) — Safe
+Analyze non-ASCII payload "张三' OR '1'='1" — Unsafe
+Analyze very long benign input (~10k chars) — Safe
+Upload CSV with only benign queries and run batch analysis — Safe
+Upload CSV containing injection payloads and run batch analysis — Unsafe / Mixed
+📊 Vulnerability Demo
+
+Vulnerable system: search "John" (string concatenation) — Safe
+Vulnerable system: search "' OR '1'='1" (string concatenation) — Unsafe (data leak)
+Secure system: search "' OR '1'='1" (ML + rule + parameterized) — Safe (blocked/mitigated)
+Secure system: search "John" (ML + rule + parameterized) — Safe
+Comparison: run list of payloads (Normal, OR, UNION, DROP, Comment) — Mixed (some Safe, some Unsafe)
+📈 Analytics Dashboard
+
+Open dashboard after several safe and malicious analyses — Mixed
+Verify Total Queries / Malicious / Safe metrics reflect session history — Mixed
+Verify pie chart (Safe vs Malicious) updates after analyses — Mixed
+Verify confidence histogram updates after analyses — Mixed
+Download detection history CSV — Safe
+Clear history and confirm dashboard empties — Safe
+💾 Database Manager
+
+View Data: open current employees table — Safe
+Add new employee with normal fields and submit — Safe
+Add new employee with name "Robert'); DROP TABLE employees;--" (input containing SQL) — Safe (stored as data)
+Execute template query "SELECT * FROM employees" — Safe
+Execute template query "SELECT * FROM employees WHERE salary > 100000" — Safe
+Execute custom query "DROP TABLE employees" — Unsafe (destructive)
+Reset Database to restore sample records — Safe
